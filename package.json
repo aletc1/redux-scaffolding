@@ -1,0 +1,85 @@
+{
+  "name": "redux-scaffolding",
+  "version": "0.0.1",
+  "description": "Another scaffolding for React Redux, but with strong typed classes and object oriented",
+  "main": "lib/redux-scaffolding.js",
+  "module": "lib/redux-scaffolding.js",
+  "typings": "lib/src/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf lib dist",
+    "build": "npm run clean && tsc && webpack --mode production",
+    "debug": "mocha --inspect-brk --require ts-node/register --require source-map-support/register --require jsdom-global/register --recursive --watch-extensions ts test/tests.tsx",
+    "test": "mocha -r ts-node/register -r jsdom-global/register -r source-map-support/register --recursive test/tests.tsx",
+    "cover": "nyc mocha --timeout=3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitrepo"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "scaffolding"
+  ],
+  "author": {
+    "name": "Alejandro Tamayo Castillo",
+    "email": "aletc1@msn.com",
+    "url": "https://www.linkedin.com/in/atamayocastillo"
+  },
+  "license": "ISC",
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "coverage",
+      "test",
+      "lib",
+      "webpack.config.js",
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/enzyme": "^3.1.12",
+    "@types/enzyme-adapter-react-16": "^1.0.2",
+    "@types/mocha": "^5.2.5",
+    "@types/react-redux": "^6.0.4",
+    "@types/redux": "^3.6.0",
+    "@types/reflect-metadata": "^0.1.0",
+    "awesome-typescript-loader": "^5.2.0",
+    "chai": "^4.1.2",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jsdom": "^11.11.0",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-redux": "^5.0.7",
+    "redux-thunk": "^2.3.0",
+    "reflect-metadata": "^0.1.12",
+    "shx": "^0.3.2",
+    "source-map-support": "^0.5.6",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.16.1",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.1.0"
+  },
+  "peerDependencies": {
+    "react": "^16.4.1",
+    "react-redux": "^5.0.7",
+    "reflect-metadata": "^0.1.12"
+  }
+}
