@@ -3,21 +3,22 @@
   "version": "0.0.1",
   "description": "Another scaffolding for React Redux, but with strong typed classes and object oriented",
   "main": "lib/redux-scaffolding.js",
+  "unpkg": "lib/redux-scaffolding.min.js",
   "module": "lib/redux-scaffolding.js",
   "typings": "lib/src/index.d.ts",
   "files": [
-    "lib/"
+    "lib/*.*"
   ],
   "scripts": {
     "clean": "shx rm -rf lib dist",
-    "build": "npm run clean && tsc && webpack --mode production",
+    "build": "npm run clean && tsc && webpack --mode production && shx rm -rf lib/test lib/src",
     "debug": "mocha --inspect-brk --require ts-node/register --require source-map-support/register --require jsdom-global/register --recursive --watch-extensions ts test/tests.tsx",
     "test": "mocha -r ts-node/register -r jsdom-global/register -r source-map-support/register --recursive test/tests.tsx",
     "cover": "nyc mocha --timeout=3000"
   },
   "repository": {
     "type": "git",
-    "url": "http://gitrepo"
+    "url": "git+https://github.com/aletc1/redux-scaffolding.git"
   },
   "keywords": [
     "react",
