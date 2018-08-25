@@ -5,13 +5,13 @@
   "main": "lib/redux-scaffolding.js",
   "unpkg": "lib/redux-scaffolding.min.js",
   "module": "lib/redux-scaffolding.js",
-  "typings": "lib/src/index.d.ts",
+  "typings": "lib/index.d.ts",
   "files": [
     "lib/*.*"
   ],
   "scripts": {
     "clean": "shx rm -rf lib dist",
-    "build": "npm run clean && tsc && webpack --mode production && shx rm -rf lib/test lib/src",
+    "build": "npm run clean && tsc && webpack --mode production && copyfiles -f lib/src/*.d.ts lib && shx rm -rf lib/src lib/test",
     "debug": "mocha --inspect-brk --require ts-node/register --require source-map-support/register --require jsdom-global/register --recursive --watch-extensions ts test/tests.tsx",
     "test": "mocha -r ts-node/register -r jsdom-global/register -r source-map-support/register --recursive test/tests.tsx",
     "cover": "nyc mocha --timeout=3000"
@@ -58,6 +58,7 @@
     "@types/reflect-metadata": "^0.1.0",
     "awesome-typescript-loader": "^5.2.0",
     "chai": "^4.1.2",
+    "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "jsdom": "^11.11.0",
