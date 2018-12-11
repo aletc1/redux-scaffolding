@@ -62,9 +62,9 @@ export function connect(...repositories: [string, Function][]): any {
         return reduxConnect((state) => {
             var newState = {} as any;
             repositories.forEach(repoInfo => {
-                var repoDefinition = (storeBuilder as any)._repositories.get(repoInfo[1].name) as any;
+                var repoDefinition = (storeBuilder as any)._repositories.get(functionName(repoInfo[1])) as any;
                 if (!repoDefinition)
-                    throw new Error(`Repository '${repoInfo[1].name}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
+                    throw new Error(`Repository '${functionName(repoInfo[1])}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
                 newState[repoInfo[0]] = { state: getProperty(state, repoDefinition.attachTo) };
             });
             return newState || {};
