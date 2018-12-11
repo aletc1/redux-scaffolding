@@ -32,19 +32,11 @@ export function saga(...actionNames: string[]) {
     }
 }
 
-// ES5 Patch
-function functionName(fun: Function) {
-    var ret = fun.toString();
-    ret = ret.substr('function '.length);
-    ret = ret.substr(0, ret.indexOf('('));
-    return ret;
-}
-
 export function connect(...repositories: [string, Function][]): any {
     return <TFunction extends Function>(constructor: TFunction): TFunction => {
         var props = {} as any;
         repositories.forEach(repoInfo => {
-            var repositoryName = functionName(repoInfo[1]);
+            var repositoryName = repoInfo[1].name;
 
             Object.defineProperty(props, repoInfo[0], {
                 get: function () {
@@ -62,12 +54,12 @@ export function connect(...repositories: [string, Function][]): any {
         return reduxConnect((state) => {
             var newState = {} as any;
             repositories.forEach(repoInfo => {
-                var repoDefinition = (storeBuilder as any)._repositories.get(functionName(repoInfo[1])) as any;
+                var repoDefinition = (storeBuilder as any)._repositories.get(repoInfo[1].name) as any;
                 if (!repoDefinition)
-                    throw new Error(`Repository '${functionName(repoInfo[1])}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
+                    throw new Error(`Repository '${repoInfo[1].name}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
                 newState[repoInfo[0]] = { state: getProperty(state, repoDefinition.attachTo) };
             });
             return newState || {};
-        },()=>props)(constructor as any) as any;
+        }, () => props)(constructor as any) as any;
     }
 }

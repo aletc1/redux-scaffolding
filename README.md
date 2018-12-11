@@ -2,6 +2,8 @@
 
 `redux-scaffolding` provides an easy way to use React Redux. It is not a replacement of redux but a scaffolding built over the existing redux library using some conventions.
 
+> **Important for ES5**: You will need a Polyfill for [Function.name](https://www.npmjs.com/package/function.name) in order to make it work on Internet Explorer).
+
 ## Main goals
 - Keep redux concepts and framework untouched
 - Object oriented approach
