@@ -32,11 +32,19 @@ export function saga(...actionNames: string[]) {
     }
 }
 
+// ES5 Patch
+function functionName(fun: Function) {
+    var ret = fun.toString();
+    ret = ret.substr('function '.length);
+    ret = ret.substr(0, ret.indexOf('('));
+    return ret;
+}
+
 export function connect(...repositories: [string, Function][]): any {
     return <TFunction extends Function>(constructor: TFunction): TFunction => {
         var props = {} as any;
         repositories.forEach(repoInfo => {
-            var repositoryName = repoInfo[1].name;
+            var repositoryName = functionName(repoInfo[1]);
 
             Object.defineProperty(props, repoInfo[0], {
                 get: function () {
