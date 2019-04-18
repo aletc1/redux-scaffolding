@@ -45,7 +45,6 @@ export function connect(...repositories: [string, Function][]): <TFunction exten
         return state;
     }, 
     () => {
-        debugger;
         var props = {} as any;
         repositories.forEach(repoInfo => {
             var repositoryName = repoInfo[1].name;
