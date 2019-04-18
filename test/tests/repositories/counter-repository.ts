@@ -19,3 +19,10 @@ export class CounterRepository extends ReduxRepository<CounterState> {
         return { ...this.state, count: this.state.count + amount };
     }
 }
+
+@repository("@@INVALID", "repo")
+export class InvalidRepository extends ReduxRepository<any> {
+    constructor() {
+        super({ count: 0 });
+    }
+}

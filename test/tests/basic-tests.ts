@@ -4,7 +4,6 @@ import 'mocha';
 import { reduce, repository, connect } from '../../src/attributes'
 import { storeBuilder, ReduxStoreBuilder, ReduxRepository, AsyncAction } from '../../src/types';
 import CategoryRepository from '../samples/category-store'
-import { CounterState } from './states/counter-state'
 import { CounterRepository } from './repositories/counter-repository'
 import { ComplexRepoDemo } from './repositories/complex-repository'
 import { DynamicRepoDemo } from './repositories/dynamic-respository'

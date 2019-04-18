@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { storeBuilder, AsyncAction, ReduxRepository } from './types';
 import "reflect-metadata";
 import { connect as reduxConnect } from 'react-redux'
@@ -32,34 +33,35 @@ export function saga(...actionNames: string[]) {
     }
 }
 
-export function connect(...repositories: [string, Function][]): any {
-    return <TFunction extends Function>(constructor: TFunction): TFunction => {
-        var props = {} as any;
-        repositories.forEach(repoInfo => {
-            var repositoryName = repoInfo[1].name;
-
-            Object.defineProperty(props, repoInfo[0], {
-                get: function () {
-                    var repoDefinition = (storeBuilder as any)._repositories.get(repositoryName) as any;
-
-                    if (!repoDefinition) {
-                        throw new Error(`Repository '${repositoryName}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
-                    }
-                    return repoDefinition.repository;
-                },
-                enumerable: true,
-                configurable: true,
-            });
-        });
-        return reduxConnect((state) => {
-            var newState = {} as any;
+export function connect(...repositories: [string, Function][]) {
+    return function decorator<TFunction extends Function>(constructor: TFunction) {
+        var constuction = function (...args: any[]) {
+            var props = {} as any;
             repositories.forEach(repoInfo => {
-                var repoDefinition = (storeBuilder as any)._repositories.get(repoInfo[1].name) as any;
-                if (!repoDefinition)
-                    throw new Error(`Repository '${repoInfo[1].name}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
-                newState[repoInfo[0]] = { state: getProperty(state, repoDefinition.attachTo) };
+                var repositoryName = repoInfo[1].name;
+                Object.defineProperty(props, repoInfo[0], {
+                    get: function () {
+                        var repoDefinition = (storeBuilder as any)._repositories.get(repositoryName) as any;
+                        if (!repoDefinition) {
+                            throw new Error(`Repository '${repositoryName}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
+                        }
+                        return repoDefinition.repository;
+                    },
+                    enumerable: true,
+                    configurable: true,
+                });
             });
-            return newState || {};
-        }, () => props)(constructor as any) as any;
+            return React.createElement(reduxConnect((state) => {
+                var newState = {} as any;
+                repositories.forEach(repoInfo => {
+                    var repoDefinition = (storeBuilder as any)._repositories.get(repoInfo[1].name) as any;
+                    if (!repoDefinition)
+                        throw new Error(`Repository '${repoInfo[1].name}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
+                    newState[repoInfo[0]] = { state: getProperty(state, repoDefinition.attachTo) };
+                });
+                return newState || {};
+            }, () => props)(constructor as any), ...args);
+        }
+        return constuction as unknown as TFunction;
     }
 }

@@ -19,11 +19,13 @@ export class SagaRepoDemo extends ReduxRepository<SimpleSaga> {
     }
 
     public start() {
+        debugger;
         return this.dispatch("SIMPLE_SAGA");
     }
 
     @saga("SIMPLE_SAGA")
     private async *onSagaStart(control: SagaControl, ...args: any[]) {
+        debugger;
         const { wait, update, dispatch } = control;
         let state: any = yield;
 

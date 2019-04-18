@@ -274,7 +274,6 @@ export class ReduxStoreBuilder {
         });
         return (repository as any).state;
     }
-
     public addRepository(repository: ReduxRepository<any>) {
         var storeInfo = Reflect.getMetadata('__STORE', repository);
         if (storeInfo == null || !storeInfo.namespace || storeInfo.attachTo == '')

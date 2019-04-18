@@ -21,7 +21,7 @@ export default class AccountRepository extends ReduxRepository<AccountState> {
 
     public incrementCounter(value: number) {
         return this.dispatchAsync<number>(AccountRepository.ACCOUNT_DEPOSIT, new Promise((resolve, reject) => {
-            setTimeout(resolve(value), 500);
+            setTimeout(()=>resolve(value), 500);
         }));
     }
 
