@@ -1,10 +1,12 @@
-﻿# redux-scaffolding
+﻿# redux-scaffolding-ts
 
-`redux-scaffolding` provides an easy way to use React Redux. It is not a replacement of redux but a scaffolding built over the existing redux library using some conventions.
+`redux-scaffolding-ts` provides an easy way to use React Redux and is specially crafted for [Microsoft TypeScript](https://github.com/Microsoft/TypeScript). It is not a replacement of redux but a scaffolding built over the existing redux library using some conventions.
 
-> **Important for ES5**: You will need a Polyfill for [Function.name](https://www.npmjs.com/package/function.name) in order to make it work on Internet Explorer).
+> **IMPORTANT NOTES**
+> - If you target **ES5** you will need a Polyfill for [Function.name](https://www.npmjs.com/package/function.name) in order to make it work on Internet Explorer.
+> - This requires **Node v10** because it uses asyncIterator for crafting sagas and async reducers.
+> - This requires Microsoft TypeScript (Babel 7.x has some issues with decorators, and specially emitting metadata like design:returntype, so use TypeScript [from Microsoft] [with ts-loader](https://github.com/TypeStrong/ts-loader) or [awesome-typescript-loader](https://github.com/s-panferov/awesome-typescript-loader))
 
-> **IMPORTANT** This requires Node v10 and TypeScript (Babel has some issues with decorators so use TypeScript [from Microsoft])
 ## Main goals
 - Keep redux concepts and framework untouched
 - Object oriented approach
@@ -24,21 +26,21 @@ Let's recall some redux concepts:
 - **Changes are made by pure functions**: *Reducers* are just pure functions that take the previous state and an action, 
  and produces a new state. 
 
-Wrapping up, Redux has **state**, **actions** and **reducers**. However, is very complex to use Redux alone, because all the
+Wrapping up, Redux has **state**, **actions** and **reducers**. However, is (arguable) very complex to use Redux alone, because all the
 plumbing required to change a simple value in the state. Also, another drawback is that in complex/big applications, the sate
 can be also very bing and hard to maintain, unless you split reducers and also split the state in smaller parts.
 
 These known issues of current redux library encourages the birth of other libraries like [conventional-redux](https://github.com/mjaneczek/conventional-redux/), [redux-schemas](https://github.com/iamtommcc/redux-schemas),
  [redux-schemas](https://github.com/ddsol/redux-schema), [react-redux-oop](https://www.npmjs.com/package/react-redux-oop) and many others.
- 
-`redux-scaffolding` is inspired on these existing libraries, but has a different goal: to ease the plumbing required 
-to build enterprise-grade applications using latest features of ES6/ES7 and TypeScript.
+
+`redux-scaffolding-ts` is inspired on these existing libraries, but has a different goal: to ease the plumbing required 
+to build enterprise-grade applications using latest features of ES6/ES7 and Microsoft TypeScript.
 
 ## Getting started
 
 To install just use the following npm command:
 ```
-npm install redux-scaffolding --save
+npm install redux-scaffolding-ts --save
 ```
 It is very important that you enable experimental decorators and emit metadata in typescript `tsconfig.json`. Example:
 ```javascript
@@ -62,7 +64,7 @@ It is very important that you enable experimental decorators and emit metadata i
 Finally, dont forget to include reflect metadata package on your bootstrap code:
 ```typescript
 import 'reflect-metadata';
-``` 
+```
 
 ### Basic concepts
 
@@ -80,9 +82,9 @@ will prevent typing errors when changing the sate in the reducer.
 Then will add a **Repository**. This concept is introduced by `react-scaffolding` and is just
 a way, using object-oriented programming, of handling specific *actions* and just update a secition
 of the application state. This follows the *separation of concerns* principe: one repository one single responsability. 
- 
+
 ```typescript
-import { repository, reduce, ReduxRepository } from 'redux-scaffolding'
+import { repository, reduce, ReduxRepository } from 'redux-scaffolding-ts'
 
 @repository("@@COUNTER", "counter")
 export class CounterRepository extends ReduxRepository<CounterState> {
@@ -114,7 +116,7 @@ actions as class properties because will help automatic refactoring if the IDE s
 actions names to beign used in other components like sagas.
 
 ```typescript
-import { connect } from 'redux-scaffolding'
+import { connect } from 'redux-scaffolding-ts'
 
 type CounterComponentProps = {
     // Any component prop you want to define
@@ -151,7 +153,7 @@ To access the repository is recommended to create a readonly property called as 
 
 Finally, the configureStore.ts content:
 ```typescript
-import { storeBuilder } from 'redux-scaffolding'
+import { storeBuilder } from 'redux-scaffolding-ts'
 
 // Global application state
 export interface ApplicationState {
@@ -200,7 +202,7 @@ or `_ERROR`. Following this example:
 
 ### Sagas
 
-Sagas in `redux-scaffolding` are very basic. If you need strong sagas, please use [redux-saga](https://github.com/redux-saga/redux-saga).
+Sagas in `redux-scaffolding-ts` are very basic. If you need strong sagas, please use [redux-saga](https://github.com/redux-saga/redux-saga).
 
 Sagas help to manage side effects (like loading data asynchronoulsy) but also can become a *Process Manager*
 in big business transactions or workflows.
@@ -351,7 +353,7 @@ export class DynamicRepoDemo extends ReduxRepository<CounterState> {
 ```
 
 ### Advanced configureStore
-Suppose that you want to integrate the current `redux-scaffolding` in an existing redux application with an
+Suppose that you want to integrate the current `redux-scaffolding-ts` in an existing redux application with an
 existing configureStore method. The only thing you need to do is pass your custom createStore and your root reducer to `storeBuilder.getStore(...)`
 
 ```typescript
@@ -361,7 +363,7 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as StoreModule from './stores/store';
 import { ApplicationState, reducers } from './stores/store';
 import { History } from 'history';
-import { storeBuilder } from 'redux-scaffolding';
+import { storeBuilder } from 'redux-scaffolding-ts';
 
 export default function configureStore(history: History, initialState?: ApplicationState) {
     // Build middleware. These are functions that can process the actions before they reach the store.

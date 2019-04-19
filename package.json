@@ -1,7 +1,7 @@
 {
-  "name": "redux-scaffolding",
+  "name": "redux-scaffolding-ts",
   "version": "0.0.1",
-  "description": "Another scaffolding for React Redux, but with strong typed classes and object oriented",
+  "description": "Another scaffolding for React Redux, but with strong typed classes, object oriented and specially handcrafted for Microsoft TypeScript",
   "main": "lib/redux-scaffolding.js",
   "unpkg": "lib/redux-scaffolding.min.js",
   "module": "lib/redux-scaffolding.js",
@@ -23,14 +23,15 @@
   "keywords": [
     "react",
     "redux",
-    "scaffolding"
+    "scaffolding",
+    "typescript"
   ],
   "author": {
     "name": "Alejandro Tamayo Castillo",
     "email": "aletc1@msn.com",
     "url": "https://www.linkedin.com/in/atamayocastillo"
   },
-  "license": "ISC",
+  "license": "MIT",
   "nyc": {
     "extension": [
       ".ts",
