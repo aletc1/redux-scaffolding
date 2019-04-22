@@ -17,14 +17,14 @@
 
 ### Why a new redux library?
 Let's recall some redux concepts:
-- **Store as a single source of truth**: In redux we have a single store that manages a big json object that represents 
+- **Store as a single source of truth**: In redux we have a single store that manages a big json object that represents
  the full state of the application. This have multiple advantages like for instance, the continuation on the browser when
- server-side rendering is activated (some state is rederer server-side and then browser actions continues modifiying that 
+ server-side rendering is activated (some state is rederer server-side and then browser actions continues modifiying that
  base state)
 - **State is readonly**: State cannot be changed directly by the developer, instead, the developer dispatch *actions*
  that are queued in a central queue and are processed one by one in a strict order.
-- **Changes are made by pure functions**: *Reducers* are just pure functions that take the previous state and an action, 
- and produces a new state. 
+- **Changes are made by pure functions**: *Reducers* are just pure functions that take the previous state and an action,
+ and produces a new state.
 
 Wrapping up, Redux has **state**, **actions** and **reducers**. However, is (arguable) very complex to use Redux alone, because all the
 plumbing required to change a simple value in the state. Also, another drawback is that in complex/big applications, the sate
@@ -33,7 +33,7 @@ can be also very bing and hard to maintain, unless you split reducers and also s
 These known issues of current redux library encourages the birth of other libraries like [conventional-redux](https://github.com/mjaneczek/conventional-redux/), [redux-schemas](https://github.com/iamtommcc/redux-schemas),
  [redux-schemas](https://github.com/ddsol/redux-schema), [react-redux-oop](https://www.npmjs.com/package/react-redux-oop) and many others.
 
-`redux-scaffolding-ts` is inspired on these existing libraries, but has a different goal: to ease the plumbing required 
+`redux-scaffolding-ts` is inspired on these existing libraries, but has a different goal: to ease the plumbing required
 to build enterprise-grade applications using latest features of ES6/ES7 and Microsoft TypeScript.
 
 ## Getting started
@@ -68,7 +68,7 @@ import 'reflect-metadata';
 
 ### Basic concepts
 
-Let's start with a classic example: a counter. 
+Let's start with a classic example: a counter.
 
 First of all, will define the form that will have the state.
 ```typescript
@@ -76,12 +76,12 @@ export interface CounterState {
     count: number
 }
 ```
-Since we are using TypeScript, the `SimpleState` interface will help us to model our state and 
+Since we are using TypeScript, the `SimpleState` interface will help us to model our state and
 will prevent typing errors when changing the sate in the reducer.
 
 Then will add a **Repository**. This concept is introduced by `react-scaffolding` and is just
 a way, using object-oriented programming, of handling specific *actions* and just update a secition
-of the application state. This follows the *separation of concerns* principe: one repository one single responsability. 
+of the application state. This follows the *separation of concerns* principe: one repository one single responsability.
 
 ```typescript
 import { repository, reduce, ReduxRepository } from 'redux-scaffolding-ts'
@@ -119,13 +119,14 @@ actions names to beign used in other components like sagas.
 import { connect } from 'redux-scaffolding-ts'
 
 type CounterComponentProps = {
-    // Any component prop you want to define
+    counter: CounterRepository;
+    // Any other component prop you want to define
 };
 
 @connect(["counter", CounterRepository])
 class CounterComponent extends React.Component<CounterComponentProps, any> {
     private get counter() {
-        return (this.props as any).counter as CounterRepository;
+        return this.props.counter;
     }
 
     constructor(props: CounterComponentProps) {
@@ -146,10 +147,10 @@ class CounterComponent extends React.Component<CounterComponentProps, any> {
 ```
 
 The decorator `connect` will automatically generate the `mapStateToProps` and `mapDispatchToProps` by convention.
-You only need to specify the `storeBuilder`, the Repository class and the name of the property under props 
+You only need to specify the `storeBuilder`, the Repository class and the name of the property under props
 you want to use to connect the repository. Since repositories are singleton, this API
  will do the job.
-To access the repository is recommended to create a readonly property called as specified in the connect decorator (in this case `get counter()`).  
+To access the repository is recommended to create a readonly property called as specified in the connect decorator (in this case `get counter()`).
 
 Finally, the configureStore.ts content:
 ```typescript
@@ -187,14 +188,14 @@ protected onGetData(): AsyncAction<string[], ListState> {
     }
 }
 ```
-This example uses a `Promise` object, but you can use the new `async/await` syntax. The idea is that 
+This example uses a `Promise` object, but you can use the new `async/await` syntax. The idea is that
 you use the `dispatchAsync` method, passing the promise as a parameter. `dispatchAsync` is also awaitable.
 
 The async reducer has return type `AsyncAction<TResult, TState>`. `TResult` must match the promise result
-type and `TState` the state. Each member, `onStart`, `onSuccess` and `onError` will trigger on each 
+type and `TState` the state. Each member, `onStart`, `onSuccess` and `onError` will trigger on each
 corresponding step of the promise.
 
-One important convention is that on each step, a new action will be automatically dispatched, with `_START`, `_SUCCESS` 
+One important convention is that on each step, a new action will be automatically dispatched, with `_START`, `_SUCCESS`
 or `_ERROR`. Following this example:
 - *onStart* will dispatch `GET_DATA_START` with `{ isBusy: true}`.
 - *onSuccess* will dispatch `GET_DATA_SUCCESS` with `{ isBusy: false, items: ["Hello", "World"]}`
@@ -236,13 +237,13 @@ private async *onGetData(control: SagaControl, ...args: any[]) {
     finally {
         yield update("DONE", { ...state, isBusy: false } as ListState);
     }
-}        
+}
 ```
-As you can see, there are contol functions (`wait`, `update`, `dispatch`) that either wait for other actions, 
+As you can see, there are contol functions (`wait`, `update`, `dispatch`) that either wait for other actions,
 change the current state or dispatch new actions. By convention the `@@NAMESPACE` and the action name (`GET_DATA`)
 will be prepended, forming, for instance `@@NAMESPACE/GET_DATA_START` global action.
 
-Sagas have more freedom and can dispatch global actions or wait for actions dispatched from other repositories. 
+Sagas have more freedom and can dispatch global actions or wait for actions dispatched from other repositories.
 Just use the full notation like will be shown on the next example.
 
 #### Complex saga
@@ -261,7 +262,7 @@ export class ComplexSagaRepoDemo extends ReduxRepository<ComplexSaga> {
     public bookVacation(clientId: number) {
         return this.dispatch("BOOK_VACATION", clientId);
     }
-    
+
     @saga("BOOK_VACATION")
     private async *onBookingStart(control: SagaControl, clientId: number) {
         const { wait, update, dispatch } = control;
@@ -274,7 +275,7 @@ export class ComplexSagaRepoDemo extends ReduxRepository<ComplexSaga> {
         let result = yield wait("@@RESERVATION/BOOK_HOTEL_SUCCESS", "@@RESERVATION/BOOK_HOTEL_FAILED");
         switch (result.type) {
             case '@@RESERVATION/BOOK_HOTEL_SUCCESS':
-                // If hotel reservation succeed, then update reservation code in state 
+                // If hotel reservation succeed, then update reservation code in state
                 state = yield update("HOTEL_SUCCESS", { hotelBookingCode: result.payload.bookingCode } as ComplexSaga)
                 break;
             case "@@RESERVATION/BOOK_HOTEL_FAILED":
@@ -289,7 +290,7 @@ export class ComplexSagaRepoDemo extends ReduxRepository<ComplexSaga> {
         result = yield wait("@@RESERVATION/BOOK_FLIGHT_SUCCESS", "@@RESERVATION/BOOK_FLIGHT_FAILED")
         switch (result.type) {
             case '@@RESERVATION/BOOK_FLIGHT_SUCCESS':
-                // If flight reservation succeed, then update reservation code in state 
+                // If flight reservation succeed, then update reservation code in state
                 state = yield update("FLIGHT_SUCCESS", { succeed: true, flightBookingCode: result.payload.bookingCode } as ComplexSaga)
                 break;
             case "@@RESERVATION/BOOK_FLIGHT_FAILED":
@@ -314,14 +315,20 @@ a distributed business transactions between multiple repositories.
 To connect to multiple repositories, you only need to pass connection information in `@connect` decorator:
 
 ```typescript
+type MultiStoreComponentProps = {
+    repo1: FirstRepository;
+    repo2: SecondRepository;
+    // Any other component prop you want to define
+};
+
 @connect(["repo1", FirstRepository], ["repo2", SecondRepository])
-class MultiStoreComponent extends React.Component<any, any> {
+class MultiStoreComponent extends React.Component<MultiStoreComponentProps, any> {
     private get repo1() {
-        return this.props.repo1 as FirstRepository;
+        return this.props.repo1;
     }
 
     private get repo2() {
-        return this.props.repo2 as SecondRepository;
+        return this.props.repo2;
     }
 
     render() {
@@ -332,7 +339,7 @@ class MultiStoreComponent extends React.Component<any, any> {
 
 ### Dynamically create reducers
 It is possible to dinamically add reducers to a repository, but only if the store is not connected.
-This is usefull in inheritance scenarios when you want to create actions names from the base class using some data from 
+This is usefull in inheritance scenarios when you want to create actions names from the base class using some data from
 the derived class.
 
 ```typescript
