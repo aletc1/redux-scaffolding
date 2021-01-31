@@ -42,7 +42,7 @@ export function connect(...repositories: [string, Function][]): <TFunction exten
                 throw new Error(`Repository '${repoInfo[1].name}' not registered in the store. Use storeBuilder.addRepository(repo) to register the repository`);
             newState[repoInfo[0]] = { state: getProperty(state, repoDefinition.attachTo) };
         });
-        return state;
+        return newState;
     }, 
     () => {
         var props = {} as any;
